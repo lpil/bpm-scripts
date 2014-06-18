@@ -1,0 +1,33 @@
+#!/usr/bin/ruby
+# encoding: utf-8
+
+require 'shellwords'
+
+filetypes = ['.flac', '.ogg', '.mp3']
+
+files = Dir.glob('**/*').reject { |f| File.directory? f }
+
+# Filter out ones that don't match the filetypes
+files.select! do |f|
+  filetypes.any? { |ft| /#{ Regexp.escape ft }$/i =~ f }
+end
+
+# Filter out ones that already have bpms in the names
+files.reject! do |f|
+  f.match(/.+\(\d{2,4}.?\d{0,4} BPM\).\w+\z/)
+end
+
+puts "#{files.size} tracks to process"
+
+# Process files in parallel
+files.each.with_index do |file, i|
+  sleep 1 until Thread.list.size < 5
+  Thread.new do
+    system "bpm-tag -f -x 250 -m 135 #{file.shellescape}"
+  end
+end
+
+# Wait until we're done
+sleep 1 until Thread.list.size == 1
+
+puts '...done!'
