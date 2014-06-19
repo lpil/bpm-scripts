@@ -1,6 +1,16 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
 
+#
+# bpm_tagdir
+#
+# Run's Mark Hill's bpm-tag script on all mp3, flac, and ogg media files in
+# the CWD (and sub directories).
+#
+# Skips files with the BPM in the file name, like this:
+#   Remarc - Suicidal (165 BPM).flac
+#
+
 require 'shellwords'
 
 Thread.abort_on_exception = true
