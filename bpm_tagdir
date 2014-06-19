@@ -3,6 +3,8 @@
 
 require 'shellwords'
 
+Thread.abort_on_exception = true
+
 filetypes = ['.flac', '.ogg', '.mp3']
 
 files = Dir.glob('**/*').reject { |f| File.directory? f }
@@ -23,7 +25,8 @@ puts "#{files.size} tracks to process"
 files.each.with_index do |file, i|
   sleep 1 until Thread.list.size < 5
   Thread.new do
-    system "bpm-tag -f -x 250 -m 135 #{file.shellescape}"
+    success = system "bpm-tag -x 250 -m 135 #{file.shellescape}"
+    fail 'Failed to process file. Is bpm-tag installed?' unless success
   end
 end
 
