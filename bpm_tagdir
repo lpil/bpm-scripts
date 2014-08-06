@@ -35,8 +35,7 @@ puts "#{files.size} tracks to process"
 files.each.with_index do |file, i|
   sleep 1 until Thread.list.size < 5
   Thread.new do
-    success = system "bpm-tag -x 250 -m 135 #{file.shellescape}"
-    fail 'Failed to process file. Is bpm-tag installed?' unless success
+    system "bpm-tag -x 250 -m 135 #{file.shellescape}"
   end
 end
 
