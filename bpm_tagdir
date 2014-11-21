@@ -53,5 +53,3 @@ num_threads.times do
 end
 
 threads.each(&:join)
-
-puts '...done!'
