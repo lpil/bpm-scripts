@@ -20,6 +20,10 @@ def calculate_bpm(file, bot_bpm = 135, top_bpm = 250, force = false)
   `bpm-tag -m #{bot_bpm} -x #{top_bpm}#{' -f' if force} #{file.shellescape}`
 end
 
+unless system('which bpm-tag > /dev/null 2>&1')
+  puts "Mark Hill's bpm-tag doesn't seem to be installed. Is it in your path?"
+end
+
 files = Dir.glob('**/*').select do |f|
   # Filter out directories
   (!File.directory? f) &&
