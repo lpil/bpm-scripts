@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 
+filetypes   = ['.flac', '.ogg', '.mp3']
+num_threads = 4
+
 #
 # bpm_tagdir
 #
@@ -10,33 +13,30 @@
 #   Remarc - Suicidal (165 BPM).flac
 #
 
+require 'shellwords'
+
 def calculate_bpm(file, bot_bpm = 135, top_bpm = 250, force = false)
   `bpm-tag -m #{bot_bpm} -x #{top_bpm} #{'-f' if force} #{file.shellescape}`
 end
 
-require 'shellwords'
-
 Thread.abort_on_exception = true
 
-filetypes = ['.flac', '.ogg', '.mp3']
+files = Dir.glob('**/*').select do |f|
+  # Filter out directories
+  (!File.directory? f) &&
 
-files = Dir.glob('**/*').reject { |f| File.directory? f }
+  # Filter out files with incorrect extensions (i.e. not mp3, etc)
+  (filetypes.any? { |extension| f.ends_with? extension }) &&
 
-# Filter out ones that don't match the filetypes
-files.select! do |f|
-  filetypes.any? { |ft| /#{ Regexp.escape ft }$/i =~ f }
-end
-
-# Filter out ones that already have bpms in the names
-files.reject! do |f|
-  f.match(/.+\(\d{2,4}.?\d{0,4} BPM\).\w+\z/)
+  # Filter out files that have the BPM in the name
+  (!f.match(/.+\(\d{2,4}.?\d{0,4} BPM\).\w+\z/))
 end
 
 puts "#{files.size} tracks to process"
 
 # Process files in parallel
 files.each.with_index do |file|
-  sleep 1 until Thread.list.size < 5
+  sleep 1 until Thread.list.size < num_threads + 1
   Thread.new do
     calculate_bpm file
   end
