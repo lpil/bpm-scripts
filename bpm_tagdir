@@ -30,7 +30,7 @@ files = Dir.glob('**/*').select do |f|
   (!File.directory? f) &&
 
   # Filter out files with incorrect extensions (i.e. not mp3, etc)
-  (filetypes.any? { |extension| f.end_with? extension }) &&
+  (filetypes.any? { |extension| f.downcase.end_with? extension }) &&
 
   # Filter out files that have the BPM in the name
   (!f.match(/.+\(\d{2,4}.?\d{0,4} BPM\).\w+\z/))
