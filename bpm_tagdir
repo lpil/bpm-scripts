@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# encoding: utf-8
 
 #
 # bpm_tagdir
@@ -10,6 +9,10 @@
 # Skips files with the BPM in the file name, like this:
 #   Remarc - Suicidal (165 BPM).flac
 #
+
+def calculate_bpm(file, bot_bpm = 135, top_bpm = 250, force = false)
+  `bpm-tag -m #{bot_bpm} -x #{top_bpm} #{'-f' if force} #{file.shellescape}`
+end
 
 require 'shellwords'
 
@@ -32,10 +35,10 @@ end
 puts "#{files.size} tracks to process"
 
 # Process files in parallel
-files.each.with_index do |file, i|
+files.each.with_index do |file|
   sleep 1 until Thread.list.size < 5
   Thread.new do
-    system "bpm-tag -x 250 -m 135 #{file.shellescape}"
+    calculate_bpm file
   end
 end
 
