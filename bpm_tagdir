@@ -15,7 +15,6 @@ num_threads = 4
 
 require 'shellwords'
 require 'thread'
-require 'mkmf'
 
 def calculate_bpm(file, bot_bpm = 135, top_bpm = 250, force = false)
   `bpm-tag -m #{bot_bpm} -x #{top_bpm}#{' -f' if force} #{file.shellescape}`
