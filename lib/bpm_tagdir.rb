@@ -1,18 +1,5 @@
 #!/usr/bin/env ruby
 
-filetypes   = ['.flac', '.ogg', '.mp3']
-num_threads = 4
-
-#
-# bpm_tagdir
-#
-# Run's Mark Hill's bpm-tag script on all mp3, flac, and ogg media files in
-# the CWD (and sub directories).
-#
-# Skips files with the BPM in the file name, like this:
-#   Remarc - Suicidal (165 BPM).flac
-#
-
 require 'shellwords'
 require 'thread'
 
@@ -57,8 +44,3 @@ def process_files(files, num_threads)
 
   threads.each(&:join)
 end
-
-ensure_bpm_tag_is_installed
-
-files = find_files filetypes
-process_files files, num_threads
