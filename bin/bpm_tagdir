@@ -10,7 +10,7 @@
 #   Remarc - Suicidal (165 BPM).flac
 #
 
-filetypes   = ['.flac', '.ogg', '.mp3']
+filetypes   = %w(flac ogg mp3)
 num_threads = 4
 
 ensure_bpm_tag_is_installed

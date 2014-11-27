@@ -3,13 +3,13 @@
 require 'shellwords'
 require 'thread'
 
-def calculate_bpm(file, bot_bpm = 135, top_bpm = 250, force = false)
-  `bpm-tag -m #{bot_bpm} -x #{top_bpm}#{' -f' if force} #{file.shellescape}`
+def calculate_bpm(file, bot_bpm = 135, top_bpm = 250, f = false)
+  system "bpm-tag -m #{bot_bpm} -x #{top_bpm}#{' -f' if f} #{file.shellescape}"
 end
 
 def ensure_bpm_tag_is_installed
   abort "Mark Hill's bpm-tag doesn't seem to be installed." unless
-    system('which bpm-tag > /dev/null 2>&1')
+    system 'which bpm-tag > /dev/null 2>&1'
 end
 
 def find_files(filetypes)
